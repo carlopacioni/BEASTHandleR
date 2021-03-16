@@ -1,5 +1,6 @@
 ---
 title: "examples"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{examples}
@@ -10,7 +11,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width=6, fig.height=4
 )
 ```
 
@@ -37,16 +39,22 @@ logRHDV2 <- read.log(log, burnin = 0.1)
 RHDV2_R0_p <- make.BDMMbyDeme.skyplot(log = logRHDV2, type = "step", maxAge = maxRHDV2)
 RHDV2_R0_p
 ```
-This is may be useful when wanting to compare different demes, but in this case they are so similar that it gets very confusing. Since the plot is a ggplot object is straightfoward to separate:
+
+
+This is may be useful when wanting to compare different demes, but in this case they are so similar that it gets very confusing. Since the plot is a ggplot object is straightforward to separate:
 ```{r}
 RHDV2_R0_p + facet_grid(Deme~.)
 
 ```
+
+
 I find that sometimes a good way to present differences in the same deme is to have one violin plot for each epoch, like so: 
 ```{r}
 viol <- make.BDMMbyDeme.violin(logRHDV2, par="R0", keepScale=FALSE) 
 viol
 ```
+
+
 Sometimes is useful to get rid of long tails to make differences more visible:
 ```{r}
 viol + ylim(c(0,4))
