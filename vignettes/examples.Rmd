@@ -1,0 +1,43 @@
+---
+title: "examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BEASTHandleR)
+```
+
+This is a simple script to present the functionality of some of the functions.
+```{r}
+# Locate the log file
+log <- system.file("extdata", "RHDV2.log", package = "BEASTHandleR")
+
+# Age of most recent sample
+maxRHDV2 <- 2017.863
+
+# Read log efficiently with data.table
+logRHDV2 <- read.log(log, burnin = 0.1)
+```
+
+```{r}
+# Generate a plot where the demes are overimposed
+# use 'step' because changeTimes are fixed
+RHDV2_R0_p <- make.BDMMbyDeme.skyplot(log = logRHDV2, type = "step", maxAge = maxRHDV2)
+RHDV2_R0_p
+```
+
+```{r}
+RHDV2_R0_p + facet_grid(Deme~.)
+
+```
