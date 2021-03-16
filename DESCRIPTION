@@ -1,11 +1,13 @@
 Package: BEASTHandleR
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Useful functions to facilitate BEAST analyses
+Version: 0.0.9
+Author: person("Carlo", "Pacioni", email="carlo.pacioni@gmail.com", role=c("aut", "cre"))
+Maintainer: Carlo Pacioni <carlo.pacioni@gmail.com>
+Description: A collection of functions to prep data for BEAST and to process 
+    BEAST outputs
+URL: https://github.com/carlopacioni/BEASTHandleR
+BugReports: https://github.com/carlopacioni/BEASTHandleR/issues
+License: WGPL-3
 Encoding: UTF-8
 LazyData: true
