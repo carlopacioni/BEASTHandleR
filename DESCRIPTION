@@ -11,3 +11,8 @@ BugReports: https://github.com/carlopacioni/BEASTHandleR/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
