@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(BEASTHandleR)
+library(ggplot2)
 ```
 
 This is a simple script to present the functionality of some of the functions.
@@ -36,8 +37,17 @@ logRHDV2 <- read.log(log, burnin = 0.1)
 RHDV2_R0_p <- make.BDMMbyDeme.skyplot(log = logRHDV2, type = "step", maxAge = maxRHDV2)
 RHDV2_R0_p
 ```
-
+This is may be useful when wanting to compare different demes, but in this case they are so similar that it gets very confusing. Since the plot is a ggplot object is straightfoward to separate:
 ```{r}
 RHDV2_R0_p + facet_grid(Deme~.)
 
+```
+I find that sometimes a good way to present differences in the same deme is to have one violin plot for each epoch, like so: 
+```{r}
+viol <- make.BDMMbyDeme.violin(logRHDV2, par="R0", keepScale=FALSE) 
+viol
+```
+Sometimes is useful to get rid of long tails to make differences more visible:
+```{r}
+viol + ylim(c(0,4))
 ```
