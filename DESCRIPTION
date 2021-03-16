@@ -8,6 +8,6 @@ Description: A collection of functions to prep data for BEAST and to process
     BEAST outputs
 URL: https://github.com/carlopacioni/BEASTHandleR
 BugReports: https://github.com/carlopacioni/BEASTHandleR/issues
-License: WGPL-3
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
