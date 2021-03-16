@@ -1,9 +1,11 @@
 #' Reads a log file
-#' 
+#'
 #' @param filename The name of the file (with the path if necessary)
 #' @param burnin The burnin to remove from the log in proportion
+#' @import data.table
+#' @export
 #' @return A data.table
-read.log <- function (filename, burnin = 0.1) 
+read.log <- function (filename, burnin = 0.1)
 {
   logfile <- data.table::fread(cmd=paste("grep -v '^#'",filename))
   n <- nrow(logfile)
@@ -12,9 +14,11 @@ read.log <- function (filename, burnin = 0.1)
 }
 
 #' Extract a parameter from HPD using a regular expression
-#' 
+#'
 #' @param  HPD The HPD table (obtained with extract.HPD)
 #' @param param The name (pattern) to use in the regular expression
+#' @import data.table
+#' @export
 #' @return A data.table
 extract.param <- function(HPD, param) {
   param <- HPD[grep(param, HPD[, Param]), ]
@@ -22,13 +26,15 @@ extract.param <- function(HPD, param) {
 }
 
 #' Extract the Highest Probability Density (HPD) from logged data
-#' 
+#'
 #' This function uses boa::boa.hpd
-#' 
+#'
 #' @param log The log (read with read.log)
 #' @param alpha The credibility interval (between 0 and 1)
+#' @import data.table
 #' @importFrom boa boa.hpd
 #' @return A data.table with HPD (lower and upper limits, and median)
+#' @export
 extract.HPD <- function(log, alpha=0.05) {
   HPD <- log[, lapply(.SD, boa::boa.hpd, alpha)]
   Median <- log[, lapply(.SD, median)]
@@ -43,7 +49,7 @@ extract.HPD <- function(log, alpha=0.05) {
 #' Generate the starting and ending times of the epochs
 #'
 #' skygrid reports as first parametr the most recent, so needs \code{reverse=TRUE}.
-#' 
+#'
 #' @param maxAge The age of the most recent sample.
 #' @param gridPoints The times used in the analysis as gridPoints (skygrid) or
 #'   changeTimes (BD models)
@@ -54,6 +60,8 @@ extract.HPD <- function(log, alpha=0.05) {
 #'   oldest.
 #' @inheritParams extract.HPD
 #' @return A data.table
+#' @import data.table
+#' @export
 make.epochs.data <- function(HPD, maxAge, gridPoints, rootHeight, reverse=FALSE) {
   if(reverse ==TRUE) {
     Time <- c(maxAge, maxAge - gridPoints, maxAge - rootHeight)
@@ -79,6 +87,8 @@ make.epochs.data <- function(HPD, maxAge, gridPoints, rootHeight, reverse=FALSE)
 #' @param epochData The starting and ending times of the epochs (generated with
 #'   make.epochs.data) or a list (see Details)
 #' @param  by the column's name to use to colourcode the skylines
+#' @import data.table
+#' @export
 make.skyplot <- function(epochData, by=NULL) {
   proc.data <- function(epochData) {
     if(nrow(epochData) == 1) stop("There is only one epoch in the data")
@@ -97,14 +107,14 @@ make.skyplot <- function(epochData, by=NULL) {
   } else {
     newepoch <- proc.data(epochData)
   }
-  skyplot <- ggplot(newepoch, aes_string(col=by, fill=by)) + 
+  skyplot <- ggplot(newepoch, aes_string(col=by, fill=by)) +
     geom_rect(aes(xmin=TimeMin, xmax=TimeMax, ymin=Lower, ymax=Upper), alpha=0.5) +
     geom_step(aes(TimeMin, Median))
   return(skyplot)
 }
 
 
-#' Produce a skylie plot starting from a BDMM-prime MCMC log
+#' Produce a skyline plot starting from a BDMM-prime MCMC log
 #'
 #' This function deals with parameters that change over time within each deme
 #' (e.g. R0, s), not between demes (e.g. migration R0AmongDemes).
@@ -121,20 +131,22 @@ make.skyplot <- function(epochData, by=NULL) {
 #' @param type The type of plot to generate. This will depend on how the
 #'   analysis has been set up: "smooth" if the timeChanges parameters are
 #'   estimated; "step" is these are fixed.
-#' @inheritParams make.epochs.data,extract.HPD
-#' @import data.table,ggplot2
-#' @importFrom boa::boa.hpd
+#' @inheritParams make.epochs.data
+#' @inheritParams extract.HPD
+#' @import data.table
+#' @import ggplot2
+#' @importFrom boa boa.hpd
 #' @export
-#' 
+#'
 make.BDMMbyDeme.skyplot <- function(log, par=c("R0", "s", "delta", "r"), nBins=100,
                                     type=c("smooth", "step"), alpha=0.05, maxAge) {
   param <- match.arg(par)
-  switch(param, R0=param <- "R0SVEpi", s=param <- "samplingProportionSVEpi", 
+  switch(param, R0=param <- "R0SVEpi", s=param <- "samplingProportionSVEpi",
          delta=param <- "becomeUninfectiousRateSVEpi", r=param <- "removalProbSVEpi")
   type <- match.arg(type)
-  
+
   dat <- log[, grep(param, names(log)), with=FALSE]
-  
+
   matches <- regexec(paste0(param,"\\.i[0-9]+_"), names(dat))
   starts <- sapply(matches, attr, "match.length") + 1
   demes <- substring(names(dat), starts)
@@ -143,7 +155,7 @@ make.BDMMbyDeme.skyplot <- function(log, par=c("R0", "s", "delta", "r"), nBins=1
   dat_demes <- lapply(demes, extract.cols, dt=dat)
   endtimes <- as.matrix(dat[, grep("endtime", names(dat)), with=FALSE])
   origins <- log[, originBDMMPrime]
-  
+
   hpd <- vector("list", length = nDemes)
   if(type == "smooth") {
     parByGrid_demes <- vector("list", length = nDemes)
@@ -154,13 +166,13 @@ make.BDMMbyDeme.skyplot <- function(log, par=c("R0", "s", "delta", "r"), nBins=1
       for(rn in seq_len(nrow(endtimes))) {
         x <- seq(0, origins[rn],  length.out = nBins)
         br <- c(0, endtimes[rn,], origins[rn])
-        parByGrid_demes[[d]][rn, ] <- as.numeric(dat_demes[[d]][rn, 
-                                                                .bincode(x, br, TRUE, TRUE), 
+        parByGrid_demes[[d]][rn, ] <- as.numeric(dat_demes[[d]][rn,
+                                                                .bincode(x, br, TRUE, TRUE),
                                                                 with=FALSE])
-        
+
       }
     }
-    
+
     hpd1col <- vector("list", length = nDemes)
     medians <- vector("list", length = nDemes)
     for(d in seq_len(nDemes)) {
@@ -178,15 +190,15 @@ make.BDMMbyDeme.skyplot <- function(log, par=c("R0", "s", "delta", "r"), nBins=1
     ages <- maxAge - median(origins) + times
     hpd1col[, Times := rep(c(times, rev(times)), 4)]
     hpd1col[, Age := rep(c(ages, rev(ages)), 4)]
-    skyplot <- ggplot(hpd1col, aes(x = Age, y=Param, col=Deme, fill=Deme)) + 
+    skyplot <- ggplot(hpd1col, aes(x = Age, y=Param, col=Deme, fill=Deme)) +
       geom_polygon(alpha=0.5) +
       geom_line(aes(Age, Median)) #+ facet_grid(Deme~.)
   } else {
     epochs <- vector("list", length = nDemes)
     for(d in seq_len(nDemes)) {
       hpd[[d]] <- extract.HPD(dat_demes[[d]], alpha = alpha)
-     epochs[[d]] <- make.epochs.data(hpd[[d]], maxAge = maxAge, 
-                                     gridPoints = median(origins) - apply(endtimes, 2, median), 
+     epochs[[d]] <- make.epochs.data(hpd[[d]], maxAge = maxAge,
+                                     gridPoints = median(origins) - apply(endtimes, 2, median),
                                      rootHeight = median(origins))
      epochs[[d]][, Deme :=rep(demes[d], nrow(epochs[[d]]))]
     }
@@ -196,7 +208,11 @@ make.BDMMbyDeme.skyplot <- function(log, par=c("R0", "s", "delta", "r"), nBins=1
 }
 
 
-
+#' Extract columns based on param name
+#'
+#' @param dt The data.table from where to extract the columns
+#' @param param The name of the param used internally
+#' @import data.table
 extract.cols <- function(dt, param) {
   newdt <- dt[, grep(param, names(dt)), with=FALSE]
   return(newdt)
@@ -227,20 +243,20 @@ extract.cols <- function(dt, param) {
 #' @export
 make.BDMMbyDeme.violin <- function(log, par=c("R0", "s", "delta", "r"), keepScale=TRUE) {
   param <- match.arg(par)
-  switch(param, R0=param <- "R0SVEpi", s=param <- "samplingProportionSVEpi", 
+  switch(param, R0=param <- "R0SVEpi", s=param <- "samplingProportionSVEpi",
          delta=param <- "becomeUninfectiousRateSVEpi", r=param <- "removalProbSVEpi")
-  
+
   dat <- log[, grep(param, names(log)), with=FALSE]
-  
+
   matches <- regexec(paste0(param,"\\.i[0-9]+_"), names(dat))
   starts <- sapply(matches, attr, "match.length") + 1
   demes <- substring(names(dat), starts)
   demes <- unique(demes[grep("endtime", demes, invert = TRUE)])
   nDemes <- length(demes)
   dat_demes <- lapply(demes, extract.cols, dt=dat)
-  
+
   process.epochs <- function(dt, param, par) {
-    dt2 <- melt.data.table(dt, measure.vars = patterns(param), 
+    dt2 <- melt.data.table(dt, measure.vars = patterns(param),
                            variable.name = "Epoch", value.name = par)
     starts <- regexec(paste0(param,"\\.i"), dt2[, Epoch])
     starts <- sapply(starts, attr, "match.length")
@@ -252,12 +268,12 @@ make.BDMMbyDeme.violin <- function(log, par=c("R0", "s", "delta", "r"), keepScal
   dat_demes <- lapply(dat_demes, process.epochs, param=param, par=par)
   names(dat_demes)  <- demes
   dat_fin <- rbindlist(dat_demes, idcol = "Deme")
-  
-  viol_plot <- ggplot(data=dat_fin, aes_string("Deme", par, fill="Deme")) + 
+
+  viol_plot <- ggplot(data=dat_fin, aes_string("Deme", par, fill="Deme")) +
     geom_violin(draw_quantiles=c(0.025, 0.5, 0.975)) +
     facet_grid(Epoch~., scales = if(keepScale) "fixed" else "free_y")
-  
-  
+
+
   return(viol_plot)
 }
 
