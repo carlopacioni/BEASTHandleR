@@ -57,5 +57,5 @@ viol
 
 Sometimes is useful to get rid of long tails to make differences more visible:
 ```{r}
-viol + ylim(c(0,4))
+viol + coord_cartesian(ylim=c(0,4)) +  geom_hline(col="red", yintercept = 1)
 ```
