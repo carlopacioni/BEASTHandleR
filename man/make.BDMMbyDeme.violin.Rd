@@ -2,7 +2,7 @@
 % Please edit documentation in R/BDSkyGridScripts.R
 \name{make.BDMMbyDeme.violin}
 \alias{make.BDMMbyDeme.violin}
-\title{Draw violin plot for each deme and epoch}
+\title{Draw a violin plot for each deme and epoch}
 \usage{
 make.BDMMbyDeme.violin(log, par = c("R0", "s", "delta", "r"), keepScale = TRUE)
 }

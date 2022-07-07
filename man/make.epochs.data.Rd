@@ -23,5 +23,5 @@ oldest.}
 A data.table
 }
 \description{
-skygrid reports as first parametr the most recent, so needs \code{reverse=TRUE}.
+skygrid reports as first parameter the most recent, so needs \code{reverse=TRUE}.
 }
