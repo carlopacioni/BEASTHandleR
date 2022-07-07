@@ -12,7 +12,7 @@
 #'
 #' The density plots will have a (black) bar at the bottom. The dot on the bar
 #' shows the median, the thick bar the lower and the thin bar the highest
-#' credibility intervals requested wtih \code{densBarWidth}.
+#' credibility intervals requested with \code{densBarWidth}.
 #'
 #' @param densBarWidth The width of the (black) bar at the base of the density
 #'    plots.
@@ -24,7 +24,8 @@
 #' @importFrom boa boa.hpd
 #' @export
 #'
-R0AmongDemes <- function(log, alpha=0.05, densBarWidth=c(0.8, 0.95), fill.col="#F8766D") {
+R0AmongDemes <- function(log, alpha=0.05, densBarWidth=c(0.8, 0.95),
+                         fill.col="#F8766D") {
 
 logAmong <- log[, grep("Among", names(log)), with=FALSE]
 hpd <- extract.HPD(logAmong, alpha = alpha)

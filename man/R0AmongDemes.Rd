@@ -35,5 +35,5 @@ across different epochs (i.e. there are not changes over time).
 
 The density plots will have a (black) bar at the bottom. The dot on the bar
 shows the median, the thick bar the lower and the thin bar the highest
-credibility intervals requested wtih \code{densBarWidth}.
+credibility intervals requested with \code{densBarWidth}.
 }
