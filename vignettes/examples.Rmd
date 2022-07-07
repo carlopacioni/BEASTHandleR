@@ -59,3 +59,22 @@ Sometimes is useful to get rid of long tails to make differences more visible:
 ```{r}
 viol + coord_cartesian(ylim=c(0,4)) +  geom_hline(col="red", yintercept = 1)
 ```
+
+
+The parameter R0AmongDemes can be visualised with the function `R0AmongDemes`. 
+This generates a table with median and HPD intervals and a density plot for each
+ parameter. These results are arranged in a matrix-like layout, where movements
+ are from columns to rows.
+ 
+ ```{r}
+ res <- R0AmongDemes(logRHDV2)
+ 
+ res[[1]]
+ 
+ res[[2]] + xlim(c(0, 0.25)) + theme(axis.text.x = element_text(angle=45))
+ 
+```
+
+ 
+ 
+
