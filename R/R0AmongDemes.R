@@ -64,7 +64,7 @@ longlog[, To := sapply(fromTo_split, "[", 2)]
 
 
 p <- ggplot(longlog, aes(value)) +
-    stat_halfeye(alpha=0.5, .width=densBarWidth, fill=fill.col) +
+    stat_halfeye(alpha=0.3, .width=densBarWidth, fill=fill.col) +
     facet_grid(To~From) +
     labs(x="R0 among demes", y="Density")
 
