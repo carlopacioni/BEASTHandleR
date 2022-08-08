@@ -97,7 +97,7 @@ make.skyplot <- function(epochData, by=NULL) {
       newepoch[1, TimeMin := newepoch[1, TimeMax]]
     } else {
       newepoch <- rbind(epochData, epochData[nrow(epochData),])
-      newepoch[nrow(epochData), TimeMin := newepoch[nrow(epochData), TimeMax]]
+      newepoch[nrow(newepoch), TimeMin := newepoch[nrow(newepoch), TimeMax]]
     }
     return(newepoch)
   }
