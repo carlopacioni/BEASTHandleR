@@ -9,7 +9,7 @@
 #' The object returned is a ggplot object, which can be modified as usual. For
 #' example, in presence of long tails, one may want to trim the y axis like so:
 #' \code{p + ylim(c(l, u))}, where p is the plot returned by the function, and
-#' \code{l} and \code{u] are the lower and upper desire limits on the y axis. It
+#' \code{l} and \code{u} are the lower and upper desire limits on the y axis. It
 #' is important to also note that the first element of the ggplot list returned
 #' are the actual data that are used to generate the plot, which can then be
 #' used for other down-stream analysis or plots.
