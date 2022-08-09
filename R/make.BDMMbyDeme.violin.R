@@ -28,9 +28,11 @@ make.BDMMbyDeme.violin <- function(log, par=c("R0", "s", "delta", "r"), keepScal
 
     dat <- log[, grep(param, names(log)), with=FALSE]
 
-    matches <- regexec(paste0(param,"\\.i[0-9]+_"), names(dat))
-    starts <- sapply(matches, attr, "match.length") + 1
-    demes <- substring(names(dat), starts)
+    # matches <- regexec(paste0(param,"\\.i[0-9]+_"), names(dat))
+    # starts <- sapply(matches, attr, "match.length") + 1
+    # demes <- substring(names(dat), starts)
+
+    demes <- sapply(strsplit(names(dat), "_"), tail, 1)
     demes <- unique(demes[grep("endtime", demes, invert = TRUE)])
     nDemes <- length(demes)
     dat_demes <- lapply(demes, extract.cols, dt=dat)
@@ -38,11 +40,11 @@ make.BDMMbyDeme.violin <- function(log, par=c("R0", "s", "delta", "r"), keepScal
     process.epochs <- function(dt, param, par) {
         dt2 <- melt.data.table(dt, measure.vars = patterns(param),
                                variable.name = "Epoch", value.name = par)
-        starts <- regexec(paste0(param,"\\.i"), dt2[, Epoch])
+        starts <- regexec(paste0(param,".*i[0-9]"), dt2[, Epoch])
         starts <- sapply(starts, attr, "match.length")
-        ends <- regexec(paste0(param,"\\.i[0-9]+"), dt2[, Epoch])
+        ends <- regexec(paste0(param,".*i[0-9]+"), dt2[, Epoch])
         ends <- sapply(ends, attr, "match.length")
-        dt2[, Epoch := substr(Epoch, starts + 1, ends)]
+        dt2[, Epoch := substr(Epoch, starts, ends)]
         return(dt2)
     }
     dat_demes <- lapply(dat_demes, process.epochs, param=param, par=par)
