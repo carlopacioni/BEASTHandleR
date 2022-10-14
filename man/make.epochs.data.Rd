@@ -7,6 +7,9 @@
 make.epochs.data(HPD, maxAge, gridPoints, rootHeight, reverse = FALSE)
 }
 \arguments{
+\item{HPD}{A data.table with HPD (lower and upper limits, and median). This is
+the output from extract.HPD}
+
 \item{maxAge}{The age of the most recent sample.}
 
 \item{gridPoints}{The times used in the analysis as gridPoints (skygrid) or

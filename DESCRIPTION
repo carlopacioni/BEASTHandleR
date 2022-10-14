@@ -5,7 +5,7 @@ Version: 0.0.9
 Author: person("Carlo", "Pacioni", email="carlo.pacioni@gmail.com", role=c("aut", "cre"))
 Maintainer: Carlo Pacioni <carlo.pacioni@gmail.com>
 Description: A collection of functions to prep data for BEAST and to process 
-    BEAST outputs
+    BEAST outputs.
 URL: https://github.com/carlopacioni/BEASTHandleR
 BugReports: https://github.com/carlopacioni/BEASTHandleR/issues
 License: GPL-3

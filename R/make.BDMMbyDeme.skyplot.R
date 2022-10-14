@@ -19,6 +19,7 @@
 #' @inheritParams extract.HPD
 #' @import data.table
 #' @import ggplot2
+#' @import stats
 #' @importFrom boa boa.hpd
 #' @export
 #'

@@ -32,6 +32,7 @@ extract.param <- function(HPD, param) {
 #' @param log The log (read with read.log)
 #' @param alpha The credibility interval (between 0 and 1)
 #' @import data.table
+#' @import stats
 #' @importFrom boa boa.hpd
 #' @return A data.table with HPD (lower and upper limits, and median)
 #' @export
@@ -50,6 +51,8 @@ extract.HPD <- function(log, alpha=0.05) {
 #'
 #' skygrid reports as first parameter the most recent, so needs \code{reverse=TRUE}.
 #'
+#' @param HPD A data.table with HPD (lower and upper limits, and median). This is
+#'   the output from extract.HPD
 #' @param maxAge The age of the most recent sample.
 #' @param gridPoints The times used in the analysis as gridPoints (skygrid) or
 #'   changeTimes (BD models)
@@ -61,6 +64,7 @@ extract.HPD <- function(log, alpha=0.05) {
 #' @inheritParams extract.HPD
 #' @return A data.table
 #' @import data.table
+#' @import utils
 #' @export
 make.epochs.data <- function(HPD, maxAge, gridPoints, rootHeight, reverse=FALSE) {
   if(reverse ==TRUE) {
